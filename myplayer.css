@@ -1,0 +1,7 @@
+.myplayer{
+    max-width: 100%;
+}
+
+.myplayer video{
+    width: 100%;
+}
