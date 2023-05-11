@@ -1,5 +1,8 @@
 .myplayer{
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .myplayer video{
@@ -9,7 +12,16 @@
 .myPlayerControls{
     display: flex;
     border-radius: 5px;
-    width: 70%;
     justify-content: center;
     align-items: center;
+    padding: 0;
+    width: fit-content;
+    background-color: rgba(255,255,255,0.4);
 }
+
+.icontheme{height: 1.5rem; padding: 0.5rem;}
+.myPlayerVolume{width: 150px;}
+.myPlayerProgress, .myPlayerVolume{height: 0.4rem; background-color: lightgrey; border-radius: 1rem;}
+.myPlayerControlsContainer{display: flex; justify-content: center;}
+.myPlayerProgressContainer{width: 300px; display: flex; align-items: center; height: 100%; cursor: pointer;}
+.volumeContainer{width: 150px; display: flex; align-items: center; height: 100%; cursor: pointer;}

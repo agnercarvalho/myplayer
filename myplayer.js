@@ -1,3 +1,5 @@
+
+// Build the structure of the video container
 function buildPlayer(video){
     let innerHTML = `<div class="${video.className}-mask">
                         <h1 class="${video.className}-texts">${video.title}</h1></div>
@@ -5,17 +7,21 @@ function buildPlayer(video){
     return innerHTML
 }
 
+// This function creates controlers (html and js) for each video with customized classes defined by the object "video", it also apply their functionalities.
 function buildControls(video, player){
     let playerChild = `<div class="${video.className}-myPlayerControls myPlayerControls">
-    <div><img class="${video.className}-control icontheme" id="play-icon" src="play.svg"/></div>
-    <div><div class="${video.className}-control ${video.className}-progress "></div></div>
-    <div><img class="${video.className}-control icontheme" src="restart.svg"/></div>
-    <div><img class="${video.className}-control icontheme " id="mute-icon" src="notmuted.svg"/><div class="${video.className}-myPlayerVolume"></div></div>
+    <div><img class="${video.className}-control icontheme" id="play-icon" src="./assets/play.svg"/></div>
+    <div class="${video.className}-progressContainer myPlayerProgressContainer"><div class="${video.className}-control ${video.className}-progress myPlayerProgress"></div></div>
+    <div><img class="${video.className}-control icontheme" src="./assets/rewind.svg"/></div>
+    <div><img class="${video.className}-control icontheme " id="mute-icon" src="./assets/unmuted.svg"/></div>
+    <div class="volumeContainer"><div class="${video.className}-myPlayerVolume myPlayerVolume"></div></div>
     </div>`
 
     const div = document.createElement("div")
+    div.classList.add("myPlayerControlsContainer")
     div.innerHTML = playerChild
     player.appendChild(div)
+    //Controles criados e adicionados no HTML
 
     let media = document.querySelector(`.${video.className}-video`)
     const controls = document.querySelectorAll(`.${video.className}-control`)
@@ -25,10 +31,17 @@ function buildControls(video, player){
         let a = document.querySelector("#play-icon")
         if(media.paused == true){
             media.play()
-            a.src = "./assets/pause.svg"}
+            a.src = "./assets/pause.svg"
+
+            //Progress Bar
+            setInterval(() => {
+                document.querySelector(`.${video.className}-progress`).style.width = `` + media.currentTime/media.duration * 300 + `px`
+            }, 1000);
+        }
         else{
             media.pause()
-            a.src = "./assets/play.svg"}
+            a.src = "./assets/play.svg"
+        }
     })
 
     // Back to beggining
@@ -46,13 +59,21 @@ function buildControls(video, player){
             a.src = "./assets/muted.svg"}
         else{
             media.volume = 1
-            a.src = "./assets/notemuted.svg"}
+            a.src = "./assets/unmuted.svg"}
     })
 
     // Volume
-    let volume = document.querySelector(`.${video.className}-myPlayerVolume`)
-    volume.addEventListener("click", e => {
-        console.log(e.target)
+    let volumeBar = document.querySelector(`.${video.className}-myPlayerVolume`)
+    const volumeContainer = document.querySelector(`.volumeContainer`)
+    volumeContainer.addEventListener("click", e => {
+        media.volume = (e.clientX - e.target.offsetLeft) / volumeContainer.clientWidth
+        volumeBar.style.width = `` + (e.clientX - e.target.offsetLeft) + `px`
+    })
+
+    // Seek
+    let seek = document.querySelector(`.${video.className}-progressContainer`)
+    seek.addEventListener("click", e => {
+        media.currentTime = ((e.clientX - e.target.offsetLeft) * media.duration ) / seek.clientWidth
     })
 }
 
