@@ -1,3 +1,15 @@
+const players = document.querySelectorAll(".myplayer")
+
+myVideos.forEach(video => {
+    players.forEach(player => {
+        if(player.classList[1] == video.className){
+            player.innerHTML = buildPlayer(video)
+        }
+        if(video.controls == true){
+            buildControls(video, player)
+        }
+    })
+});
 
 // Build the structure of the video container
 function buildPlayer(video){
@@ -14,24 +26,36 @@ function buildControls(video, player){
     <div class="${video.className}-progressContainer myPlayerProgressContainer"><div class="${video.className}-control ${video.className}-progress myPlayerProgress"></div></div>
     <div><img class="${video.className}-control icontheme" src="./assets/rewind.svg"/></div>
     <div><img class="${video.className}-control icontheme " id="mute-icon" src="./assets/unmuted.svg"/></div>
-    <div class="volumeContainer"><div class="${video.className}-myPlayerVolume myPlayerVolume"></div></div>
+    <div class="${video.className}-volumeContainer myPlayerVolumeContainer"><div class="${video.className}-myPlayerVolume myPlayerVolume"></div></div>
     </div>`
 
     const div = document.createElement("div")
     div.classList.add("myPlayerControlsContainer")
     div.innerHTML = playerChild
     player.appendChild(div)
-    //Controles criados e adicionados no HTML
-
-    let media = document.querySelector(`.${video.className}-video`)
-    const controls = document.querySelectorAll(`.${video.className}-control`)
     
+    let media = document.querySelector(`.${video.className}-video`)
+    createControlsEvents(media, video)
+}
+
+
+function createControlsEvents(media, video){
+    let controls = document.querySelectorAll(`.${video.className}-control`)
+    console.log(controls)
+    videoPlay(media,controls[0],video)
+    videoRewind(media,controls[2])
+    videoMute(media,controls[3])
+    videoVolume(media,video)
+    videoSeek(media,video)
+}
+
+function videoPlay(media,btn,video){
     // Play / Pause
-    controls[0].addEventListener("click", () => {
-        let a = document.querySelector("#play-icon")
+    console.log(btn)
+    btn.addEventListener("click", () => {
         if(media.paused == true){
             media.play()
-            a.src = "./assets/pause.svg"
+            document.querySelector("#play-icon").src = "./assets/pause.svg"
 
             //Progress Bar
             setInterval(() => {
@@ -40,53 +64,44 @@ function buildControls(video, player){
         }
         else{
             media.pause()
-            a.src = "./assets/play.svg"
+            document.querySelector("#play-icon").src = "./assets/play.svg"
         }
     })
+}
 
+function videoRewind(media,btn){
     // Back to beggining
-    controls[2].addEventListener("click", () => {
+    btn.addEventListener("click", () => {
         media.pause()
         media.currentTime = 0
     })
-
-    // Mute / Unmute
-    let a = document.querySelector("#mute-icon")
-    controls[3].addEventListener("click", () => {
-        let b = media.volume
-        if(b > 0){
+}
+ 
+// Mute / Unmute event
+function videoMute(media,btn){
+    btn.addEventListener("click", () => {
+        if(media.volume > 0){
             media.volume = 0
-            a.src = "./assets/muted.svg"}
+            document.querySelector("#mute-icon").src = "./assets/muted.svg"}
         else{
             media.volume = 1
-            a.src = "./assets/unmuted.svg"}
+            document.querySelector("#mute-icon").src = "./assets/unmuted.svg"} 
     })
+}
 
-    // Volume
+ // Volume
+function videoVolume(media,video){
     let volumeBar = document.querySelector(`.${video.className}-myPlayerVolume`)
-    const volumeContainer = document.querySelector(`.volumeContainer`)
-    volumeContainer.addEventListener("click", e => {
-        media.volume = (e.clientX - e.target.offsetLeft) / volumeContainer.clientWidth
+    document.querySelector(`.${video.className}-volumeContainer`).addEventListener("click", e => {
+        media.volume = (e.clientX - e.target.offsetLeft) / document.querySelector(`.${video.className}-volumeContainer`).clientWidth
         volumeBar.style.width = `` + (e.clientX - e.target.offsetLeft) + `px`
     })
+}
 
-    // Seek
+// Seek
+function videoSeek(media, video){
     let seek = document.querySelector(`.${video.className}-progressContainer`)
     seek.addEventListener("click", e => {
         media.currentTime = ((e.clientX - e.target.offsetLeft) * media.duration ) / seek.clientWidth
     })
 }
-
-const players = document.querySelectorAll(".myplayer")
-
-myVideos.forEach(video => {
-    players.forEach(player => {
-        if(player.classList[1] == video.className){
-            player.innerHTML = buildPlayer(video)
-        }
-        if(video.controls == true){
-            buildControls(video, player)
-        }
-    })
-});
-

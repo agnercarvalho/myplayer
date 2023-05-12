@@ -24,4 +24,4 @@
 .myPlayerProgress, .myPlayerVolume{height: 0.4rem; background-color: lightgrey; border-radius: 1rem;}
 .myPlayerControlsContainer{display: flex; justify-content: center;}
 .myPlayerProgressContainer{width: 300px; display: flex; align-items: center; height: 100%; cursor: pointer;}
-.volumeContainer{width: 150px; display: flex; align-items: center; height: 100%; cursor: pointer;}
+.myPlayerVolumeContainer{width: 150px; display: flex; align-items: center; height: 100%; cursor: pointer;}
