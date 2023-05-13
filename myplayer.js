@@ -1,3 +1,7 @@
+window.onload = () => {
+    console.log("Hola!.This page is loaded!")
+};
+
 const players = document.querySelectorAll(".myplayer")
 
 myVideos.forEach(video => {
