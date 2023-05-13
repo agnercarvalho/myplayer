@@ -29,19 +29,21 @@ function buildControls(video, player){
     <div class="${video.className}-volumeContainer myPlayerVolumeContainer"><div class="${video.className}-myPlayerVolume myPlayerVolume"></div></div>
     </div>`
 
+    
     const div = document.createElement("div")
     div.classList.add("myPlayerControlsContainer")
     div.innerHTML = playerChild
     player.appendChild(div)
     
     let media = document.querySelector(`.${video.className}-video`)
+    document.querySelector(`.${video.className}-progressContainer`).style.height = document.querySelector(`.${video.className}-myPlayerControls`).clientHeight + `px`
+    document.querySelector(`.${video.className}-volumeContainer`).style.height = document.querySelector(`.${video.className}-myPlayerControls`).clientHeight + `px`
     createControlsEvents(media, video)
 }
 
 
 function createControlsEvents(media, video){
     let controls = document.querySelectorAll(`.${video.className}-control`)
-    console.log(controls)
     videoPlay(media,controls[0],video)
     videoRewind(media,controls[2])
     videoMute(media,controls[3])
@@ -51,7 +53,6 @@ function createControlsEvents(media, video){
 
 function videoPlay(media,btn,video){
     // Play / Pause
-    console.log(btn)
     btn.addEventListener("click", () => {
         if(media.paused == true){
             media.play()
@@ -59,7 +60,7 @@ function videoPlay(media,btn,video){
 
             //Progress Bar
             setInterval(() => {
-                document.querySelector(`.${video.className}-progress`).style.width = `` + media.currentTime/media.duration * 300 + `px`
+                document.querySelector(`.${video.className}-progress`).style.width = media.currentTime/media.duration * document.querySelector(`.${video.className}-progressContainer`).clientWidth + `px`
             }, 1000);
         }
         else{
@@ -93,8 +94,8 @@ function videoMute(media,btn){
 function videoVolume(media,video){
     let volumeBar = document.querySelector(`.${video.className}-myPlayerVolume`)
     document.querySelector(`.${video.className}-volumeContainer`).addEventListener("click", e => {
-        media.volume = (e.clientX - e.target.offsetLeft) / document.querySelector(`.${video.className}-volumeContainer`).clientWidth
-        volumeBar.style.width = `` + (e.clientX - e.target.offsetLeft) + `px`
+        media.volume = (e.layerX - e.target.offsetLeft) / document.querySelector(`.${video.className}-volumeContainer`).clientWidth
+        volumeBar.style.width = `` + (e.layerX - e.target.offsetLeft) + `px`
     })
 }
 
@@ -102,6 +103,7 @@ function videoVolume(media,video){
 function videoSeek(media, video){
     let seek = document.querySelector(`.${video.className}-progressContainer`)
     seek.addEventListener("click", e => {
-        media.currentTime = ((e.clientX - e.target.offsetLeft) * media.duration ) / seek.clientWidth
+        media.currentTime = ((e.layerX - e.target.offsetLeft) * media.duration ) / seek.clientWidth
+        document.querySelector(`.${video.className}-progress`).style.width = media.currentTime/media.duration * document.querySelector(`.${video.className}-progressContainer`).clientWidth + `px`
     })
 }
