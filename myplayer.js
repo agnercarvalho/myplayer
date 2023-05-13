@@ -24,6 +24,7 @@ function buildControls(video, player){
     let playerChild = `<div class="${video.className}-myPlayerControls myPlayerControls">
     <div><img class="${video.className}-control icontheme" id="play-icon" src="./assets/play.svg"/></div>
     <div class="${video.className}-progressContainer myPlayerProgressContainer"><div class="${video.className}-control ${video.className}-progress myPlayerProgress"></div></div>
+    <div class="${video.className}-time myPlayerTime">0:00:00</div>
     <div><img class="${video.className}-control icontheme" src="./assets/rewind.svg"/></div>
     <div><img class="${video.className}-control icontheme " id="mute-icon" src="./assets/unmuted.svg"/></div>
     <div class="${video.className}-volumeContainer myPlayerVolumeContainer"><div class="${video.className}-myPlayerVolume myPlayerVolume"></div></div>
@@ -41,6 +42,26 @@ function buildControls(video, player){
     createControlsEvents(media, video)
 }
 
+/*
+function openFullscreen() {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {  
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { 
+      elem.msRequestFullscreen();
+    }
+}
+
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { 
+  document.webkitExitFullscreen();
+} else if (document.msExitFullscreen) { 
+  document.msExitFullscreen();}
+}
+*/
 
 function createControlsEvents(media, video){
     let controls = document.querySelectorAll(`.${video.className}-control`)
@@ -49,6 +70,14 @@ function createControlsEvents(media, video){
     videoMute(media,controls[3])
     videoVolume(media,video)
     videoSeek(media,video)
+}
+
+function videoTime(media,video) {
+        let hour = Math.floor(media.currentTime/3600)
+        let min = Math.floor((media.currentTime/60))
+        let sec = Math.floor(media.currentTime%60)
+        
+        document.querySelector(`.${video.className}-time`).innerHTML = hour + ":" + ("00"+ min).slice(-2) + ":" + ("00"+ sec).slice(-2)
 }
 
 function videoPlay(media,btn,video){
@@ -61,6 +90,7 @@ function videoPlay(media,btn,video){
             //Progress Bar
             setInterval(() => {
                 document.querySelector(`.${video.className}-progress`).style.width = media.currentTime/media.duration * document.querySelector(`.${video.className}-progressContainer`).clientWidth + `px`
+                videoTime(media,video)
             }, 1000);
         }
         else{
@@ -70,6 +100,7 @@ function videoPlay(media,btn,video){
     })
 }
 
+// Rewind Video
 function videoRewind(media,btn){
     // Back to beggining
     btn.addEventListener("click", () => {
