@@ -132,6 +132,7 @@ function videoVolume(media,video){
         media.volume = (e.layerX - e.target.offsetLeft) / document.querySelector(`.${video.className}-volumeContainer`).clientWidth
         volumeBar.style.width = `` + (e.layerX - e.target.offsetLeft) + `px`
     })
+    
 }
 
 // Seek
